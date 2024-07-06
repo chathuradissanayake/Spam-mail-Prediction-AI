@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>📧Spam Mail Classifier📧</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <style>
+        body {
+            background-color: #121212;
+            background-image: linear-gradient(to bottom right, #121212, rgba(30, 144, 255, 0.5)); /* Reduced opacity */
+            color: #FFFFFF;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        h1 {
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #1E90FF, #1C86EE);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+        }
+        textarea {
+            width: 100%;
+            max-width: 600px;
+            height: 200px; /* Increased height */
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            resize: none;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #1E90FF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1C86EE;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Spam Mail Classifier</h1>
+    <form id="classification-form">
+        <label for="text">Insert Mail:</label>
+        <textarea id="text" name="text" rows="4" cols="50"></textarea>
+        <button type="submit">Classify</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('classification-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerText = `Prediction: ${result.prediction}`;
+            if (result.prediction === 'spam') {
+                resultDiv.style.color = 'red';
+            } else {
+                resultDiv.style.color = 'green';
+            }
+        });
+    </script>
+</body>
+</html>
